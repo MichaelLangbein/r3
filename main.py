@@ -1,5 +1,5 @@
 #%% 
-from riesgos.backend.orchestrator import addStep, run
+from riesgos.backend.orchestrator import addAction, run
 
 
 
@@ -27,7 +27,7 @@ description1 = {
     "description": "A simple step"
 }
 
-addStep("step1", action1, description1)
+addAction("step1", action1, description1)
 
 
 
@@ -48,7 +48,7 @@ description2 = {
     ]
 }
 
-addStep("step2", action2, description2)
+addAction("step2", action2, description2)
 
 #%%
 
