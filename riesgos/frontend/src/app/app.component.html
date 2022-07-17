@@ -1,3 +1,12 @@
-<app-action-list [actions]="actions$ | async"></app-action-list>
-<app-map></app-map>
-<app-product-list></app-product-list>
+
+<div class="header">
+    <h1>
+        Riesgos 2.0
+    </h1>
+</div>
+
+<div class="content">
+    <app-action-list class="leftWindow" [actions]="actions$ | async"></app-action-list>
+    <app-map class="center"></app-map>
+    <app-product-list class="rightWindow"></app-product-list>
+</div>

@@ -1,0 +1,33 @@
+.header {
+    background-color: black;
+    height: 5vh;
+    padding: 0 5% 0 5%;
+    display: flex;
+    align-items: center;
+}
+
+.header h1 {
+    color: white;
+}
+
+.content {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: center;
+    height: 95vh;
+}
+
+.leftWindow {
+    flex: 1 0 20%;
+    background-color: lightgray;
+}
+
+.center {
+    flex: 1 0 60%;
+}
+
+.rightWindow {
+    flex: 1 0 20%;
+    background-color: lightgray;
+}
