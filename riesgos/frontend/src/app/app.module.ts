@@ -5,13 +5,15 @@ import { AppComponent } from './app.component';
 import { ActionListComponent } from './components/action-list/action-list.component';
 import { MapComponent } from './components/map/map.component';
 import { ProductListComponent } from './components/product-list/product-list.component';
+import { ActionComponent } from './components/action/action.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     ActionListComponent,
     MapComponent,
-    ProductListComponent
+    ProductListComponent,
+    ActionComponent
   ],
   imports: [
     BrowserModule,
