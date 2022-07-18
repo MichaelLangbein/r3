@@ -1,18 +1,10 @@
+<clr-main-container [ngClass]="{'floating':ui.floating}">
+  <ukis-global-alert *ngIf="ui.alert" [(alert)]="ui.alert"></ukis-global-alert>
+  <ukis-global-progress *ngIf="ui.progress" [(progress)]="ui.progress"></ukis-global-progress>
 
-<div class="main-container">
-    <div class="header">
-        <div class="branding">
-            <h1>
-                Riesgos 2.0
-            </h1>
-        </div>
-    </div>
-
-    <div class="content-container">
-        <app-action-list class="leftWindow" [actions]="actions$ | async"></app-action-list>
-        <app-map class="center"></app-map>
-        <app-product-list class="rightWindow"></app-product-list>
-    </div>
-</div>
-
-
+  <ukis-header [ukis-title]="title" [ukis-short-title]="shortTitle" [ukis-version]="version">
+    <a *ngFor="let route of routes" routerLink="/{{route.path}}" routerLinkActive="active"
+      class="nav-link nav-text header-nav-el">{{route.data?.['title']}}</a>
+  </ukis-header>
+  <router-outlet></router-outlet>
+</clr-main-container>
