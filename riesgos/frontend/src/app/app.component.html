@@ -1,12 +1,18 @@
 
-<div class="header">
-    <h1>
-        Riesgos 2.0
-    </h1>
+<div class="main-container">
+    <div class="header">
+        <div class="branding">
+            <h1>
+                Riesgos 2.0
+            </h1>
+        </div>
+    </div>
+
+    <div class="content-container">
+        <app-action-list class="leftWindow" [actions]="actions$ | async"></app-action-list>
+        <app-map class="center"></app-map>
+        <app-product-list class="rightWindow"></app-product-list>
+    </div>
 </div>
 
-<div class="content">
-    <app-action-list class="leftWindow" [actions]="actions$ | async"></app-action-list>
-    <app-map class="center"></app-map>
-    <app-product-list class="rightWindow"></app-product-list>
-</div>
+

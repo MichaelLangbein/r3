@@ -42,9 +42,12 @@ def action2(para1, para2):
 description2 = {
     "title": "Step 2",
     "description": "Another simple step",
+    "dependencies": [
+        "step1"
+    ],
     "userParas": [
-        { "select": [1, 2, 3] },
-        { "select": [2, 3, 4] }
+        { "label": "para1", "options": [1, 2, 3] },
+        { "label": "para2", "options": [2, 3, 4] }
     ]
 }
 

@@ -6,6 +6,7 @@ import { ActionListComponent } from './components/action-list/action-list.compon
 import { MapComponent } from './components/map/map.component';
 import { ProductListComponent } from './components/product-list/product-list.component';
 import { ActionComponent } from './components/action/action.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -17,7 +18,8 @@ import { ActionComponent } from './components/action/action.component';
   ],
   imports: [
     BrowserModule,
-    HttpClientModule
+    HttpClientModule,
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

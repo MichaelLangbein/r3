@@ -1,0 +1,7 @@
+- where should state live - backend or frontend?
+  - if backend: how should it be represented? How transferred?
+  - <= no, frontend! backend needs to be available to many users at once. 
+    - <= but the way it currently works it's not. It uses one global state. Make instances of one class!
+- only allow one step after its dependencies have run
+- allow to re-set steps
+  - delete their downstream dependencies
