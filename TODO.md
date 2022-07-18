@@ -4,7 +4,6 @@
 
 
 # Todos
-- frontend provide initial AOI
 - user-paras back to python
 - step-state
 - dependencies between steps

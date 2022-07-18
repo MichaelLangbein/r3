@@ -6,6 +6,7 @@ app = Flask(__name__)
 cors = CORS(app)
 
 actions = {}
+appInfo = {}
 
 
 # on this route the frontend is hosted
@@ -13,6 +14,12 @@ actions = {}
 def indexRoute():
     return send_from_directory("./fe/dist")
     
+
+# on this route the frontend gets general app-information
+@app.route("/info", methods=["GET"])
+def infoRoute():
+    return appInfo
+
 
 # on this route the frontend gets the current steps
 @app.route("/actions", methods=["GET"])
@@ -33,7 +40,13 @@ def actionRoute(id):
     return results
 
 
+def addAppInfo(info):
+    global appInfo
+    appInfo = info
+
 def addAction(id, action, description = None):
+    global actions
+    description["id"] = id
     actions[id] = {
         "description": description, 
         "action": action

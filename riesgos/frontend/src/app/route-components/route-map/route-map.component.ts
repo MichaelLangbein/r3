@@ -36,6 +36,9 @@ export class RouteMapComponent implements OnInit {
   ngOnInit() {
     this.addBaselayers();
     this.actions$ = this.backendSvc.getActions();
+    this.backendSvc.getInfo().subscribe(info => {
+      this.mapStateSvc.setExtent(info.aoi);
+    });
   }
 
   addBaselayers() {

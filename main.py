@@ -1,5 +1,5 @@
 #%% 
-from riesgos.backend.orchestrator import addAction, run
+from riesgos.backend.orchestrator import addAction, addAppInfo, run
 
 
 
@@ -24,7 +24,11 @@ def action1():
 
 description1 = {
     "title": "Step 1",
-    "description": "A simple step"
+    "description": "A simple step",
+    "userParas": [
+        { "label": "para1", "options": [1, 2, 3] },
+        { "label": "para2", "options": [2, 3, 4] }
+    ]
 }
 
 addAction("step1", action1, description1)
@@ -45,15 +49,15 @@ description2 = {
     "dependencies": [
         "step1"
     ],
-    "userParas": [
-        { "label": "para1", "options": [1, 2, 3] },
-        { "label": "para2", "options": [2, 3, 4] }
-    ]
 }
 
 addAction("step2", action2, description2)
 
 #%%
+
+addAppInfo({
+    "aoi": [-78, -11, -73, -9]
+})
 
 run()
 
