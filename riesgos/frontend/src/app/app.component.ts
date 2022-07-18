@@ -63,6 +63,11 @@ export class AppComponent {
       );
     }
     this.ui.subs = this.sub2AlertAndProgress();
+    this.alertService.alert({
+      closeable: true,
+      type: 'info',
+      text: "This is a demonstrator."
+    });
   }
 
   /**

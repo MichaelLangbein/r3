@@ -25,6 +25,10 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 // import all used icons
 import { coreCollectionIcons, essentialCollectionIcons, ClarityIcons } from '@cds/core/icon';
+import { ActionListComponent } from './components/action-list/action-list.component';
+import { ActionComponent } from './components/action/action.component';
+import { BackendService } from './services/backend.service';
+import { HttpClientModule } from '@angular/common/http';
 // loading an icon from the "core set" now must be done manually
 ClarityIcons.addIcons(...coreCollectionIcons);
 ClarityIcons.addIcons(...essentialCollectionIcons);
@@ -42,7 +46,9 @@ ClarityIcons.addIcons(...essentialCollectionIcons);
     RouteAccessibilityComponent,
     RouteAboutComponent,
     VerticalNavResizeComponent,
-    NavResizeDirectiveDirective
+    NavResizeDirectiveDirective,
+    ActionListComponent,
+    ActionComponent,
   ],
   imports: [
     BrowserModule,
@@ -52,11 +58,13 @@ ClarityIcons.addIcons(...essentialCollectionIcons);
     MapOlModule,
     LayerControlModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    HttpClientModule
   ],
   providers: [
     AlertService,
-    ProgressService
+    ProgressService,
+    BackendService
   ],
   bootstrap: [AppComponent]
 })
