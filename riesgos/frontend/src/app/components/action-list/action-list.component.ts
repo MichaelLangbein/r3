@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { Action } from 'src/app/services/backend.service';
 
 @Component({
   selector: 'app-action-list',
@@ -7,7 +8,7 @@ import { Component, Input, OnInit } from '@angular/core';
 })
 export class ActionListComponent implements OnInit {
 
-  @Input() actions: any[] = [];
+  @Input() actions: Action[] = [];
 
   constructor() { }
 

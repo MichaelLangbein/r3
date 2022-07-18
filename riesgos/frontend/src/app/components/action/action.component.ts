@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
+import { Action, BackendService } from 'src/app/services/backend.service';
 
 @Component({
   selector: 'app-action',
@@ -8,10 +9,10 @@ import { FormGroup, FormControl } from '@angular/forms';
 })
 export class ActionComponent implements OnInit {
 
-  @Input() action: any;
+  @Input() action!: Action;
   public form: FormGroup = new FormGroup({});
 
-  constructor() { }
+  constructor(private backendSvc: BackendService) { }
 
   ngOnInit(): void {
     console.log(this.action);
@@ -24,6 +25,9 @@ export class ActionComponent implements OnInit {
 
   onSubmit() {
     console.log(this.form.value);
+    this.backendSvc.executeAction(this.action.id, this.form.value).pipe().subscribe((response) => {
+      console.log(response)
+    });
   }
 
 }

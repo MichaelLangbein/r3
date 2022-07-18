@@ -19,7 +19,12 @@ export class BackendService {
   }
 
   public executeAction(actionId: string, data: any) {
-    this.http.post(`http://localhost:5000/actions/${actionId}`, data);
+    const requestOptions = {
+      headers: {  
+          'Content-Type': 'application/json'
+      }
+    };
+    return this.http.post(`http://localhost:5000/actions/${actionId}`, data, requestOptions);
   }
 }
 

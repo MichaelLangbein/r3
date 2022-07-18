@@ -34,10 +34,11 @@ def actionsRoute():
 # on this route the backend listens to frontend-user-input
 @app.route("/actions/<id>", methods=["POST"])
 def actionRoute(id):
-    args = request.json
+    global actions
+    payload = request.json
     action = actions[id]
-    results = action(args)
-    return results
+    result = action["action"](payload)
+    return {"data": result }
 
 
 def addAppInfo(info):
