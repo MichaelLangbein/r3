@@ -1,63 +1,36 @@
-#%% 
-from riesgos.backend.orchestrator import addAction, addAppInfo, run
+from riesgos.backend.processRegistry import ProcessRegistry
+from riesgos.backend.server import run
 
 
 
-#%%
-
-def action1(data):
-    print("Action 1 got the following parameters:")
-    print(data)
-    return data["para1"] + data["para2"]
-    
-
-description1 = {
-    "title": "Step 1",
-    "description": "A simple step",
-    "userParas": [
-        { "label": "para1", "options": [1, 2, 3] },
-        { "label": "para2", "options": [2, 3, 4] }
-    ]
-}
-
-addAction("step1", action1, description1)
+eqSvc = EqSvc()
+deusSvc = Deus()
+pl = ProcessRegistry()
 
 
-
-#%%
-
-def action2(para1, para2):
-    data = {
-        "type": "GeoJSON",
-        "features": [{
-            "id": 1,
-            "type": 'Point',
-            "coordinates": [14, 52]
-        }, {
-            "id": 2,
-            "type": 'Point',
-            "coordinates": [15, 53]
-        }]
-    }
-    return data
-
-description2 = {
-    "title": "Step 2",
-    "description": "Another simple step",
-    "dependencies": [
-        "step1"
-    ],
-}
-
-addAction("step2", action2, description2)
-
-#%%
-
-addAppInfo({
-    "aoi": [-78, -11, -73, -9]
-})
-
-run()
+@pl.step(id="eq", title="Earthquake", description="some description", provides=["eqPoints", "eqWms"])
+def runEqSim():
+    (points, wms) = eqSvc.exec()
+    return [{
+        "id": "eqPoints",
+        "data": points
+    }, {
+        "id": "eqWms",
+        "data": wms,
+        "display": "wms"
+    }]
 
 
-# %%
+@pl.step(id="deus", title="EQ-damage", requires=["eqPoints"], userParas=[{"schema": [1, 2, 3]}], provides=["damage"])
+def runDeus(schema, eqPoints):
+    damage = deusSvc.exec(schema, eqPoints)
+    return [{
+        "id": "damage",
+        "data": damage,
+        "display": "geojson"
+    }]
+
+
+
+run(pl, 5000)
+

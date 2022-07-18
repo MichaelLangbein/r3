@@ -1,8 +1,10 @@
-from flask import Flask, request, send_from_directory
+from flask import Flask, request, send_from_directory, session
 from flask_cors import CORS
+from riesgos.backend.processRegistry import ProcessRegistry
 
 
 app = Flask(__name__)
+app.secret_key = "change me"
 cors = CORS(app)
 
 
@@ -41,22 +43,8 @@ def actionRoute(id):
 
 
 
-
-def addAppInfo(info):
-    global appInfo
-    appInfo = info
-
-def addAction(id, action, description = None):
-    global actions
-    description["id"] = id
-    actions[id] = {
-        "description": description, 
-        "action": action
-    }
-
-
-def run():
-    app.run(host="localhost", port=5000, debug=True)
+def run(pr: ProcessRegistry, port=5000, debug=True):
+    app.run(host="localhost", port=port, debug=debug)
 
 
 
