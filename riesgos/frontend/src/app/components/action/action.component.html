@@ -1,10 +1,10 @@
 
-<div class="action card">
-    <div class="title card-header">{{ action.title }}</div>
-    <div class="description card-text">{{ action.description }}</div>
+<div class="card">
+    <div class="card-header" [ngClass]="'header-state-' + action.state">{{ action.action.title }}</div>
+    <div class="card-text">{{ action.action.description }}</div>
     <form [formGroup]="form" (ngSubmit)="onSubmit()" clrForm>
-        <div *ngIf="action.userParas">
-            <select *ngFor="let para of action.userParas" type="text" [formControlName]="para.label">
+        <div *ngIf="action.action.userParas">
+            <select *ngFor="let para of action.action.userParas" type="text" [formControlName]="para.label">
                 <option value="">...</option>
                 <option *ngFor="let value of para.options" [value]="value">{{value}}</option>
             </select>

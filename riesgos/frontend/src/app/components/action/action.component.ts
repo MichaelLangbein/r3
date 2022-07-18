@@ -1,33 +1,31 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
-import { Action, BackendService } from 'src/app/services/backend.service';
+import { ActionService, StatefulAction } from 'src/app/services/action.service';
 
 @Component({
   selector: 'app-action',
   templateUrl: './action.component.html',
-  styleUrls: ['./action.component.css']
+  styleUrls: ['./action.component.scss']
 })
 export class ActionComponent implements OnInit {
 
-  @Input() action!: Action;
+  @Input() action!: StatefulAction;
   public form: FormGroup = new FormGroup({});
 
-  constructor(private backendSvc: BackendService) { }
+  constructor(private actionSvc: ActionService) {
+  }
 
   ngOnInit(): void {
     console.log(this.action);
-    if (this.action.userParas) {
-      for (const para of this.action.userParas) {
+    if (this.action.action.userParas) {
+      for (const para of this.action.action.userParas) {
         this.form.addControl(para.label, new FormControl(para.options[0]))
       }
     }
   }
 
   onSubmit() {
-    console.log(this.form.value);
-    this.backendSvc.executeAction(this.action.id, this.form.value).pipe().subscribe((response) => {
-      console.log(response)
-    });
+    this.actionSvc.formFilled(this.action.action.id, this.form.value);
   }
 
 }

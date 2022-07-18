@@ -1,0 +1,19 @@
+
+.header-state-incomplete {
+}
+
+.header-state-ready {
+    background-color: aqua;
+}
+
+.header-state-running {
+    background-color: beige;
+}
+
+.header-state-completed {
+    background-color: aquamarine;
+}
+
+.header-state-error {
+    background-color: coral;
+}

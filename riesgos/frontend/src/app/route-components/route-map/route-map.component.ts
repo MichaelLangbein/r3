@@ -4,8 +4,9 @@ import { LayersService } from '@dlr-eoc/services-layers';
 import { MapStateService } from '@dlr-eoc/services-map-state';
 import { IMapControls } from '@dlr-eoc/map-ol';
 import { EocLitemap, BlueMarbleTile } from '@dlr-eoc/base-layers-raster';
-import { BackendService } from 'src/app/services/backend.service';
 import { Observable } from 'rxjs';
+import { ActionService, StatefulAction } from 'src/app/services/action.service';
+import { BackendService } from 'src/app/services/backend.service';
 
 @Component({
   selector: 'app-route-map',
@@ -23,11 +24,12 @@ export class RouteMapComponent implements OnInit {
     maxWidth: 40,
     unit: 'rem'
   };
-  public actions$!: Observable<any>;
+  public actions$!: Observable<StatefulAction[]>;
   
   constructor(
     public layerSvc: LayersService,
     public mapStateSvc: MapStateService,
+    private actionSvc: ActionService,
     private backendSvc: BackendService,
   ) {
     this.controls = {};
@@ -35,7 +37,8 @@ export class RouteMapComponent implements OnInit {
 
   ngOnInit() {
     this.addBaselayers();
-    this.actions$ = this.backendSvc.getActions();
+    this.actionSvc.loadActions();
+    this.actions$ = this.actionSvc.getActions();
     this.backendSvc.getInfo().subscribe(info => {
       this.mapStateSvc.setExtent(info.aoi);
     });
