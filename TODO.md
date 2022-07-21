@@ -1,21 +1,23 @@
 # Design
  - all harmonization in python-script
- - all state in frontend
+ - all state in python-script
 
 
 # Todos
-- dependencies between steps
-  - depended paras back to python
-  - on "reset", delete all dependent data
+- state in python script
+  - expose orchestrator through flask
+- sessions
+  - clone orchestrator for every session
 - provide wms
 - host compiled angular-app through flask
 - provide package on pip
 - step-state
   - styling
   - body: form vs value
+- product-descriptions
+  - legend + text
+  - summary-stats
 
 
 
 # Clear up
-- How do I deal with dependencies between nodes that differ between backend and frontend?
-  - Example: deus requires a backend-point-intensity, but frontend shows a wms-intensity

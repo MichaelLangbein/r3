@@ -1,10 +1,13 @@
+from datetime import timedelta
 from flask import Flask, request, send_from_directory, session
 from flask_cors import CORS
-from riesgos.backend.processRegistry import ProcessRegistry
+from riesgos.backend.orchestrator import Orchestrator
+from riesgos.backend.orchestratorFactory import OrchestratorFactory
 
 
 app = Flask(__name__)
 app.secret_key = "change me"
+app.permanent_session_lifetime = timedelta(hours=5)
 cors = CORS(app)
 
 
@@ -13,6 +16,7 @@ cors = CORS(app)
 @app.route("/")
 def indexRoute():
     return send_from_directory("./fe/dist")
+
     
 
 # on this route the frontend gets general app-information
@@ -43,7 +47,7 @@ def actionRoute(id):
 
 
 
-def run(pr: ProcessRegistry, port=5000, debug=True):
+def run(pr: OrchestratorFactory, port=5000, debug=True):
     app.run(host="localhost", port=port, debug=debug)
 
 

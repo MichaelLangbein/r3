@@ -1,28 +1,29 @@
-from riesgos.backend.processRegistry import ProcessRegistry
+from riesgos.backend.orchestratorFactory import OrchestratorFactory
+from riesgos.backend.orchestrator import Product
 from riesgos.backend.server import run
-
+from services import EqSvc, Deus
 
 
 eqSvc = EqSvc()
 deusSvc = Deus()
-pl = ProcessRegistry()
+of = OrchestratorFactory()
 
 
-@pl.step(id="eq", title="Earthquake", description="some description", provides=["eqPoints", "eqWms"])
-def runEqSim():
+@of.step(id="eq", title="Earthquake", description="some description", provides=["eqPoints", "eqWms"])
+async def runEqSim():
     (points, wms) = eqSvc.exec()
-    return [{
-        "id": "eqPoints",
-        "data": points
-    }, {
-        "id": "eqWms",
-        "data": wms,
-        "display": "wms"
-    }]
+    return [Product(
+        id="eqPoints",
+        data=points
+    ), Product(
+        id="eqWms",
+        data=wms,
+        display="wms"
+    )]
 
 
-@pl.step(id="deus", title="EQ-damage", requires=["eqPoints"], userParas=[{"schema": [1, 2, 3]}], provides=["damage"])
-def runDeus(schema, eqPoints):
+@of.step(id="deus", title="EQ-damage", requires=["eqPoints"], userParas=[{"schema": [1, 2, 3]}], provides=["damage"])
+async def runDeus(schema, eqPoints):
     damage = deusSvc.exec(schema, eqPoints)
     return [{
         "id": "damage",
@@ -32,5 +33,5 @@ def runDeus(schema, eqPoints):
 
 
 
-run(pl, 5000)
+run(of, 5000)
 
