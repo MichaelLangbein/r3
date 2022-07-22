@@ -1,7 +1,7 @@
 from concurrent.futures import ProcessPoolExecutor
 from dataclasses import dataclass
 from enum import Enum
-from typing import List, Callable, Awaitable
+from typing import List, Callable, Awaitable, Optional
 
 
 
@@ -10,6 +10,13 @@ class Product:
     """ Some data that may be produced by a `process` and consumed by another `process` """
     id: str
     data: object
+
+
+@dataclass
+class UserPara(Product):
+    """ Some data that is not provided from an upstream process, but through a user-selection """
+    label: Optional[str]
+    options: List[object]
 
 
 @dataclass
@@ -26,7 +33,7 @@ class State(str, Enum):
     INCOMPLETE = "incomplete"
     READY = "ready"
     RUNNING = "running"
-    COMPLETE = "complete"
+    COMPLETE = "completed"
     ERROR = "error"
 
 
@@ -56,13 +63,24 @@ class Orchestrator:
     def __init__(self, processes: List[Process] = [], products: List[Product] = []):
         self.processes = processes
         self.products = products
+        self.calculateStates()
+
+    def calculateStates(self):
+        for process in self.processes:
+            requirementsMet = self.allInputsPresent(process)
+            if requirementsMet and process.state == State.INCOMPLETE:
+                process.state = State.READY
+
 
     async def execute(self, id: str) -> List[Product]:
         process = self.getProcess(id)
         inputs = self.getInputs(process)
-        outputs = await process.callback(*inputs)
+        process.state = State.RUNNING
+        outputs = await process.callback(inputs)
+        process.state = State.COMPLETE
         for output in outputs:
             self.setProduct(output)
+        self.calculateStates()
         return outputs
         
     def getProcess(self, id: str) -> Process:
@@ -76,6 +94,15 @@ class Orchestrator:
             input = self.getProduct(inputId)
             inputs.append(input)
         return inputs
+
+    def allInputsPresent(self, process: Process, ignoreUserParas = True) -> bool:
+        inputs = self.getInputs(process)
+        for input in inputs:
+            if isinstance(input, UserPara) and ignoreUserParas:
+                continue
+            if not input.data:
+                return False
+        return True
 
     def getOutputs(self, process: Process) -> List[Product]:
         outputs = []
@@ -93,6 +120,11 @@ class Orchestrator:
         for p in self.products:
             if p.id == product.id:
                 p.data = product.data
+    
+    def setProductData(self, id: str, data) -> None:
+        for p in self.products:
+            if p.id == id:
+                p.data = data
 
 
 

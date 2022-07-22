@@ -1,6 +1,7 @@
-from riesgos.backend.orchestratorFactory import OrchestratorFactory
+from riesgos.backend.orchestratorFactory import OrchestratorFactory, Para
 from riesgos.backend.orchestrator import DisplayableProduct, Product
 from riesgos.backend.server import webAppFactory, AppInfo
+from riesgos.backend.utils import find
 from services import EqSvc, Deus
 
 
@@ -9,8 +10,8 @@ deusSvc = Deus()
 of = OrchestratorFactory()
 
 
-@of.step(id="eq", title="Earthquake", description="some description", requires=[], provides=["eqPoints", "eqWms"])
-async def runEqSim():
+@of.step(id="eq", title="Earthquake", description="some description", requires=[], provides=["intensity", "eqPoints"])
+async def runEqSim(paras):
     (i, points) = await eqSvc.exec()
     return [Product(
         id="intensity",
@@ -22,9 +23,11 @@ async def runEqSim():
     )]
 
 
-@of.step(id="deus", title="EQ-damage", requires=["intensity"], provides=["damage"])
-async def runDeus(intensity):
-    damage = await deusSvc.exec(intensity)
+@of.step(id="deus", title="EQ-damage", description="another description", requires=["intensity"], userParas=[Para(id="exposure", options=["1", "2", "3"])], provides=["damage"])
+async def runDeus(paras):
+    exposure = find(paras, lambda para: para.id == 'exposure')
+    intensity = find(paras, lambda para: para.id == 'intensity')
+    damage = await deusSvc.exec(intensity.data)
     return [DisplayableProduct(
         id = "damage",
         data = damage,

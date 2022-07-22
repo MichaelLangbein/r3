@@ -1,9 +1,10 @@
 from dataclasses import dataclass
+from math import prod
 from typing import List
 from datetime import timedelta
 from flask import Flask, request, send_from_directory, session
 from flask_cors import CORS
-from .orchestrator import Orchestrator, Process, Product, DisplayableProduct
+from .orchestrator import Orchestrator, Process, Product, DisplayableProduct, UserPara
 from .orchestratorFactory import OrchestratorFactory
 
 
@@ -17,9 +18,20 @@ def processToJson(process: Process):
         "state": process.state
     }
 
+def productToJson(product: Product):
+    j = {
+        "id": product.id,
+        "data": product.data
+    }
+    if isinstance(product, UserPara):
+        j["options"] = product.options
+    if isinstance(product, DisplayableProduct):
+        j["display"] = product.display
+    return j
+
 def toGraph(o: Orchestrator):
     return {
-        "products": [p for p in o.products],
+        "products": [productToJson(p) for p in o.products],
         "processes": [processToJson(p) for p in o.processes]
     }
 
@@ -68,7 +80,11 @@ def webAppFactory(appInfo: AppInfo, pr: OrchestratorFactory) -> Flask:
     # on this route the backend listens to frontend-user-input
     @app.route("/actions/<id>", methods=["POST"])
     async def actionRoute(id):
-        print("Now handling action: ", id)
+        print("Server: Now handling action: ", id)
+        userData = request.json
+        for productId in userData:
+            data = userData[productId]
+            orchestrator.setProductData(id, data)
         results = await orchestrator.execute(id)
         graph = toGraph(orchestrator)
         return {"graph": graph }

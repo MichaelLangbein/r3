@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Process } from 'src/app/services/backend.service';
+import { Action } from 'src/app/route-components/route-map/route-map.component';
+
 
 
 @Component({
@@ -9,11 +10,10 @@ import { Process } from 'src/app/services/backend.service';
 })
 export class ActionListComponent implements OnInit {
 
-  @Input() actions: Process[] | null = [];
+  @Input() actions: Action[] | null = [];
 
   constructor() { }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
 }

@@ -4,19 +4,11 @@
 
 
 # Todos
-- repair frontend
-- calculate state in orchestrator
-- allow user-paras in @of.step
+- backend: read user-paras
 - sessions
   - clone orchestrator for every session
 - host compiled angular-app through flask
 - provide package on pip
-- step-state
-  - styling
-  - body: form vs value
-- product-descriptions
-  - legend + text
-  - summary-stats
 
 
 

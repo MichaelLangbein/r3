@@ -34,9 +34,9 @@ export class BackendService {
           'Content-Type': 'application/json'
       }
     };
-    this.http.post<Graph>(`http://localhost:5000/actions/${actionId}`, data, requestOptions)
-      .subscribe((graph: Graph) => {
-        this.graph$.next(graph);
+    this.http.post<{"graph": Graph}>(`http://localhost:5000/actions/${actionId}`, data, requestOptions)
+      .subscribe((data) => {
+        this.graph$.next(data.graph);
     });
   }
 }
@@ -58,15 +58,11 @@ export interface Process {
 export interface Product {
   id: string,
   data: any,
-  display: string
+  display?: string,
+  options?: string[]
 }
 
 export interface Graph {
   processes: Process[],
   products: Product[]
-}
-
-export interface UserPara {
-  label: string,
-  options: string[]
 }

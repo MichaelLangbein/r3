@@ -1,7 +1,13 @@
+from dataclasses import dataclass
 from typing import List
-from .orchestrator import Process, Product, Orchestrator
+from .orchestrator import Process, Product, Orchestrator, UserPara
 from .orchestrator import ProcessCallback
 
+
+@dataclass
+class Para:
+    id: str
+    options: List[str]
 
 
 def productListFromProcessList(processes: List[Process]) -> List[Product]:
@@ -42,21 +48,32 @@ class OrchestratorFactory:
             data
         ))
 
+    def addUserPara(self, userParaData: Para):
+        self.products.append(UserPara(
+            id=userParaData.id,
+            label=userParaData.id,
+            options=userParaData.options,
+            data=None
+        ))
+
     def productHasData(self, id):
         for product in self.products:
             if product.id == id:
                 return product.data is not None
 
 
-    def step(self, id: str, requires: List[str], provides: List[str], title: str = "", description: str = ""):
+    def step(self, id: str, requires: List[str], provides: List[str], userParas: List[Para]= [], title: str = "", description: str = ""):
         """
             Use this as a function annotation to register a function as a process.
         """
         def wrapper(callback: ProcessCallback):
-            self.addStep(callback, id, requires, provides, title, description)
+            allRequires = requires + [p.id for p in userParas]
+            self.addStep(callback, id, allRequires, provides, title, description)
             for productId in requires:
                 if not self.productHasData(productId):
                     self.addProduct(productId, None)
+            for data in userParas:
+                self.addUserPara(data)
             for productId in provides:
                 if not self.productHasData(productId):
                     self.addProduct(productId, None)

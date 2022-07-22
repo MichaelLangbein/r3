@@ -1,4 +1,5 @@
 import asyncio as a
+import random as r
 
 
 eqData = {
@@ -367,12 +368,12 @@ damageData = {
 class EqSvc():
     async def exec(self):
         await a.sleep(1)
-        return eqData
+        i = r.randint(1, 5)
+        return (i, eqData)
 
 
 class Deus():
     async def exec(self, intensity):
-        print("Got intensity: ", intensity)
         await a.sleep(1.5)
         newDamageData = damageData.copy()
         for feature in newDamageData["features"]:

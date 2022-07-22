@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
+import { Action } from 'src/app/route-components/route-map/route-map.component';
 import { BackendService, Process } from 'src/app/services/backend.service';
 
 @Component({
@@ -9,22 +10,23 @@ import { BackendService, Process } from 'src/app/services/backend.service';
 })
 export class ActionComponent implements OnInit {
 
-  @Input() action!: Process;
+  @Input() action!: Action;
   public form: FormGroup = new FormGroup({});
 
   constructor(private backendSvc: BackendService) {
   }
 
   ngOnInit(): void {
-    // if (this.action.userParas) {
-    //   for (const para of this.action.userParas) {
-    //     this.form.addControl(para.label, new FormControl(para.options[0]))
-    //   }
-    // }
+    if (this.action.userParas) {
+      for (const para of this.action.userParas) {
+        this.form.addControl(para.id, new FormControl(para.options![0]))
+      }
+    }
   }
 
   onSubmit() {
-    this.backendSvc.executeAction(this.action.id, {});
+    console.log("submitting:", this.action.process.id, this.form.value)
+    this.backendSvc.executeAction(this.action.process.id, this.form.value);
   }
 
 }

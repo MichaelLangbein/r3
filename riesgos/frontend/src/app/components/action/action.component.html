@@ -1,14 +1,14 @@
 
 <div class="card">
-    <div class="card-header" [ngClass]="'header-state-' + action.state">{{ action.title }}</div>
-    <div class="card-text">{{ action.description }}</div>
-    <form [formGroup]="form" (ngSubmit)="onSubmit()" clrForm>
-        <!-- <div *ngIf="action.userParas">
-            <select *ngFor="let para of action.action.userParas" type="text" [formControlName]="para.label">
+    <div class="card-header" [ngClass]="'header-state-' + action.process.state">{{ action.process.title }}</div>
+    <div class="card-text">{{ action.process.description }}</div>
+    <form *ngIf="action.process.state === 'ready'" [formGroup]="form" (ngSubmit)="onSubmit()" clrForm>
+        <div *ngIf="action.userParas">
+            <select *ngFor="let para of action.userParas" type="text" [formControlName]="para.id">
                 <option value="">...</option>
                 <option *ngFor="let value of para.options" [value]="value">{{value}}</option>
             </select>
-        </div> -->
+        </div>
         <button type="submit" class="btn" [disabled]="!form.valid">Submit</button>
     </form>
 </div>
