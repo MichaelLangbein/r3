@@ -19,15 +19,7 @@ def processToJson(process: Process):
     }
 
 def productToJson(product: Product):
-    j = {
-        "id": product.id,
-        "data": product.data
-    }
-    if isinstance(product, UserPara):
-        j["options"] = product.options
-    if isinstance(product, DisplayableProduct):
-        j["display"] = product.display
-    return j
+    return product
 
 def toGraph(o: Orchestrator):
     return {

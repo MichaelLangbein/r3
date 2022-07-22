@@ -80,6 +80,7 @@ export class RouteMapComponent implements OnInit {
       console.log("got new products: ", products)
       this.layerSvc.removeLayers();
       for (const product of products) {
+        console.log(product)
         if (product.display && product.display === 'geojson') {
           this.layerSvc.addLayer(new VectorLayer({
             id: product.id,

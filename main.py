@@ -25,9 +25,9 @@ async def runEqSim(paras):
 
 @of.step(id="deus", title="EQ-damage", description="another description", requires=["intensity"], userParas=[Para(id="exposure", options=["1", "2", "3"])], provides=["damage"])
 async def runDeus(paras):
-    exposure = find(paras, lambda para: para.id == 'exposure')
-    intensity = find(paras, lambda para: para.id == 'intensity')
-    damage = await deusSvc.exec(intensity.data)
+    exposure = find(paras, lambda para: para.id == 'exposure').data
+    intensity = find(paras, lambda para: para.id == 'intensity').data
+    damage = await deusSvc.exec(intensity)
     return [DisplayableProduct(
         id = "damage",
         data = damage,

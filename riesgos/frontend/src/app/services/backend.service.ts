@@ -25,7 +25,7 @@ export class BackendService {
   }
 
   public getInfo(): Observable<AppInfo> {
-    return this.http.get<AppInfo>("http://localhost:5000/info");
+    return this.http.get<{info: AppInfo}>("http://localhost:5000/info").pipe(map(i => i.info));
   }
 
   public executeAction(actionId: string, data: any) {

@@ -117,9 +117,9 @@ class Orchestrator:
                 return product
 
     def setProduct(self, product: Product) -> None:
-        for p in self.products:
+        for i, p in enumerate(self.products):
             if p.id == product.id:
-                p.data = product.data
+                self.products[i] = product
     
     def setProductData(self, id: str, data) -> None:
         for p in self.products:
