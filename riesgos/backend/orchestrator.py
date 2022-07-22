@@ -7,11 +7,22 @@ from typing import List, Callable, Awaitable
 
 @dataclass
 class Product:
+    """ Some data that may be produced by a `process` and consumed by another `process` """
     id: str
     data: object
 
 
-class State(Enum):
+@dataclass
+class DisplayableProduct(Product):
+    """
+        A special type of product that has a graphical representation.
+        Attributes:
+        - `display`: A string that tells the frontend how to display this data. The concrete implementation is left to the frontend.
+    """
+    display: str
+
+
+class State(str, Enum):
     INCOMPLETE = "incomplete"
     READY = "ready"
     RUNNING = "running"
@@ -23,6 +34,9 @@ ProcessCallback = Callable[[List[Product]], Awaitable[List[Product]]]
 
 @dataclass
 class Process:
+    """
+        Something that, given a list of `Product`s, can be executed and then return more `Product`s.
+    """
     id: str
     callback: ProcessCallback
     requires: List[str]
@@ -34,10 +48,11 @@ class Process:
 
 
 
-"""
-    Keeps track of products and of processes' states.
-"""
 class Orchestrator:
+    """
+        Keeps track of products and of processes' states.
+    """
+    
     def __init__(self, processes: List[Process] = [], products: List[Product] = []):
         self.processes = processes
         self.products = products

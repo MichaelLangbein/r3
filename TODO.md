@@ -4,11 +4,11 @@
 
 
 # Todos
-- state in python script
-  - expose orchestrator through flask
+- repair frontend
+- calculate state in orchestrator
+- allow user-paras in @of.step
 - sessions
   - clone orchestrator for every session
-- provide wms
 - host compiled angular-app through flask
 - provide package on pip
 - step-state

@@ -1,6 +1,6 @@
 from riesgos.backend.orchestratorFactory import OrchestratorFactory
-from riesgos.backend.orchestrator import Product
-from riesgos.backend.server import run
+from riesgos.backend.orchestrator import DisplayableProduct, Product
+from riesgos.backend.server import webAppFactory, AppInfo
 from services import EqSvc, Deus
 
 
@@ -9,29 +9,30 @@ deusSvc = Deus()
 of = OrchestratorFactory()
 
 
-@of.step(id="eq", title="Earthquake", description="some description", provides=["eqPoints", "eqWms"])
+@of.step(id="eq", title="Earthquake", description="some description", requires=[], provides=["eqPoints", "eqWms"])
 async def runEqSim():
-    (points, wms) = eqSvc.exec()
+    (i, points) = await eqSvc.exec()
     return [Product(
+        id="intensity",
+        data=i
+    ), DisplayableProduct(
         id="eqPoints",
-        data=points
-    ), Product(
-        id="eqWms",
-        data=wms,
-        display="wms"
+        data=points,
+        display="geojson"
     )]
 
 
-@of.step(id="deus", title="EQ-damage", requires=["eqPoints"], userParas=[{"schema": [1, 2, 3]}], provides=["damage"])
-async def runDeus(schema, eqPoints):
-    damage = deusSvc.exec(schema, eqPoints)
-    return [{
-        "id": "damage",
-        "data": damage,
-        "display": "geojson"
-    }]
+@of.step(id="deus", title="EQ-damage", requires=["intensity"], provides=["damage"])
+async def runDeus(intensity):
+    damage = await deusSvc.exec(intensity)
+    return [DisplayableProduct(
+        id = "damage",
+        data = damage,
+        display = "geojson"
+    )]
 
 
-
-run(of, 5000)
+appInfo = AppInfo(aoi=[-78, -11, -73, -9])
+app = webAppFactory(appInfo, of)
+app.run(port=5000, debug=True)
 

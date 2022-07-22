@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 @Injectable({
@@ -8,10 +8,20 @@ import { map } from 'rxjs/operators';
 })
 export class BackendService {
 
+  private graph$: BehaviorSubject<Graph> = new BehaviorSubject<Graph>({
+    processes: [],
+    products: []
+  });
+
   constructor(private http: HttpClient) { }
 
-  public getActions(): Observable<Action[]> {
-    return this.http.get("http://localhost:5000/actions").pipe(map((d: any) => d.data));
+  public getGraph(): Observable<Graph> {
+    if (this.graph$.value.processes.length === 0) {
+      this.http.get("http://localhost:5000/graph").pipe(map((d: any) => d.graph)).subscribe((graph: Graph) => {
+        this.graph$.next(graph);
+      });
+    };
+    return this.graph$;
   }
 
   public getInfo(): Observable<AppInfo> {
@@ -24,7 +34,10 @@ export class BackendService {
           'Content-Type': 'application/json'
       }
     };
-    return this.http.post(`http://localhost:5000/actions/${actionId}`, data, requestOptions);
+    this.http.post<Graph>(`http://localhost:5000/actions/${actionId}`, data, requestOptions)
+      .subscribe((graph: Graph) => {
+        this.graph$.next(graph);
+    });
   }
 }
 
@@ -33,12 +46,24 @@ export interface AppInfo {
   aoi: [number, number, number, number];
 }
 
-export interface Action {
+export interface Process {
   id: string,
   title: string,
   description: string,
-  userParas?: UserPara[],
-  dependencies?: string[]
+  provides: string[],
+  requires: string[],
+  state: string,
+}
+
+export interface Product {
+  id: string,
+  data: any,
+  display: string
+}
+
+export interface Graph {
+  processes: Process[],
+  products: Product[]
 }
 
 export interface UserPara {

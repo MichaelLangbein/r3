@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { StatefulAction } from 'src/app/services/action.service';
+import { Process } from 'src/app/services/backend.service';
 
 
 @Component({
@@ -9,7 +9,7 @@ import { StatefulAction } from 'src/app/services/action.service';
 })
 export class ActionListComponent implements OnInit {
 
-  @Input() actions: StatefulAction[] | null = [];
+  @Input() actions: Process[] | null = [];
 
   constructor() { }
 

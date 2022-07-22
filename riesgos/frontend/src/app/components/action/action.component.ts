@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
-import { ActionService, StatefulAction } from 'src/app/services/action.service';
+import { BackendService, Process } from 'src/app/services/backend.service';
 
 @Component({
   selector: 'app-action',
@@ -9,23 +9,22 @@ import { ActionService, StatefulAction } from 'src/app/services/action.service';
 })
 export class ActionComponent implements OnInit {
 
-  @Input() action!: StatefulAction;
+  @Input() action!: Process;
   public form: FormGroup = new FormGroup({});
 
-  constructor(private actionSvc: ActionService) {
+  constructor(private backendSvc: BackendService) {
   }
 
   ngOnInit(): void {
-    console.log(this.action);
-    if (this.action.action.userParas) {
-      for (const para of this.action.action.userParas) {
-        this.form.addControl(para.label, new FormControl(para.options[0]))
-      }
-    }
+    // if (this.action.userParas) {
+    //   for (const para of this.action.userParas) {
+    //     this.form.addControl(para.label, new FormControl(para.options[0]))
+    //   }
+    // }
   }
 
   onSubmit() {
-    this.actionSvc.formFilled(this.action.action.id, this.form.value);
+    this.backendSvc.executeAction(this.action.id, {});
   }
 
 }
