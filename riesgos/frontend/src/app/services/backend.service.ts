@@ -17,7 +17,7 @@ export class BackendService {
 
   public getGraph(): Observable<Graph> {
     if (this.graph$.value.processes.length === 0) {
-      this.http.get("http://localhost:5000/graph").pipe(map((d: any) => d.graph)).subscribe((graph: Graph) => {
+      this.http.get("http://localhost:5000/graph", {withCredentials: true}).pipe(map((d: any) => d.graph)).subscribe((graph: Graph) => {
         this.graph$.next(graph);
       });
     };
@@ -30,6 +30,7 @@ export class BackendService {
 
   public executeAction(actionId: string, data: any) {
     const requestOptions = {
+      withCredentials: true,
       headers: {  
           'Content-Type': 'application/json'
       }

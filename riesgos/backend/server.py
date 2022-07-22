@@ -37,23 +37,27 @@ class AppInfo:
 def webAppFactory(appInfo: AppInfo, pr: OrchestratorFactory) -> Flask:
     
 
-    # @TODO: create a dedicated orchestrator for every session.
     # @TODO: have orchestrator only keep `href`s to data. Client can then download that data separately from the state-graph.
-
-
-    orchestrator = pr.makeOrchestrator()
 
     app = Flask(__name__)
     app.secret_key = "change me"
     app.permanent_session_lifetime = timedelta(hours=5)
-    cors = CORS(app)
+    cors = CORS(app, supports_credentials=True)
 
+    orchestrators = {}
 
+    @app.before_first_request
+    def ensureOrchestratorSession():
+        if "orchestrator" not in session:
+            key = len(orchestrators.keys())
+            orchestrators[key] = pr.makeOrchestrator()
+            session["orchestrator"] = key
+
+    
     # on this route the frontend is hosted
     @app.route("/")
     def indexRoute():
         return send_from_directory("./fe/dist")
-
         
 
     # on this route the frontend gets general app-information
@@ -65,6 +69,7 @@ def webAppFactory(appInfo: AppInfo, pr: OrchestratorFactory) -> Flask:
     # on this route the frontend gets the current steps
     @app.route("/graph", methods=["GET"])
     def graphRoute():
+        orchestrator = orchestrators[session["orchestrator"]]
         graph = toGraph(orchestrator)
         return {"graph": graph}
 
@@ -73,6 +78,7 @@ def webAppFactory(appInfo: AppInfo, pr: OrchestratorFactory) -> Flask:
     @app.route("/actions/<id>", methods=["POST"])
     async def actionRoute(id):
         print("Server: Now handling action: ", id)
+        orchestrator = orchestrators[session["orchestrator"]]
         userData = request.json
         for productId in userData:
             data = userData[productId]
